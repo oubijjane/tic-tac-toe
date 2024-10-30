@@ -1,0 +1,12 @@
+.mainStart {
+    justify-self: center;
+}
+
+.wraper{
+    display: grid;
+    grid-template-columns: 50px 50px 50px;
+    grid-template-rows: 50px 50px 50px;
+}
+.cell {
+    border: 2px solid black;
+}
