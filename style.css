@@ -4,9 +4,13 @@
 
 .wraper{
     display: grid;
-    grid-template-columns: 50px 50px 50px;
-    grid-template-rows: 50px 50px 50px;
+    grid-template-columns: 100px 100px 100px;
+    grid-template-rows: 100px 100px 100px;
 }
 .cell {
     border: 2px solid black;
+}
+.cell {
+    font-size: 5rem;
+    text-align: center;
 }
