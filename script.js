@@ -5,7 +5,6 @@ function gameBoard(name) {
     const setGameBoardSize = (boardSize) => {
         let board = [];
         for (let i = 1; i <= boardSize; i++) {
-            console.log(i);
             board.push(i);
         }
         gameBoardSize = board;
@@ -58,45 +57,23 @@ function winConditions(player) {
     }
     return win;
 }
-//let playerName = prompt("player 1 name:");
-//const player1 = player(playerName);
-//console.log(player1);
 
-//playerName = prompt("player 2 name:");
-//const player2 = player(playerName);
-//console.log(player2);
-
-//let playerMark = prompt("choose your mark(X or O):");
-/* player1.setPlayerMark(playerMark);
-if (player1.getPlayerMark() === "x") {
-    player2.setPlayerMark("o");
-} else {
-    player2.setPlayerMark("x");
-}
-console.log(player1.getPlayerMark());
-console.log(player2.getPlayerMark());
- */
 
 function turn(player, column) {
-    // let column = prompt(player.playerName + " choose your column:")
     let i = ticTacToe.getGameBoardSize().indexOf(parseInt(column));
     if (i != -1) {
         ticTacToe.getGameBoardSize().splice(i, 1);
         player.setColumns(column);
     }
     else {
-        console.log("hello");
         player.setSkipTurn(true);
     }
     if (winConditions(player)) {
-        console.log(`${player.playerName} is won`);
         player.setScore();
-        console.log(`${player.playerName} score: ${player.getScore()}`)
         return "win";
     }
     if (ticTacToe.getGameBoardSize().length === 0) {
-        console.log("game finished no more columns");
-        return "finished";
+        return "draw";
     }
 
 }
@@ -108,11 +85,13 @@ function game(player1, player2, element) {
         p1 = turn(player1, element.id);
         element.textContent = player1.getPlayerMark();
         player1.setSkipTurn(true);
-        player2.setSkipTurn(false);
-        if (p1 === "stop" || p1 === "finished" || p1 === "win") {
-            return "finished";
-        } else if (p1 === "win" || p2 === "win") {
-            return true;
+        console.log(ticTacToe.getGameBoardSize().length + " " + ticTacToe.getGameBoardSize());
+    
+        if (p1 === "win" || p2 === "win") {
+            return "win";
+        }player2.setSkipTurn(false);
+        if (ticTacToe.getGameBoardSize().length == 0) {
+            return "draw";
         }
     }
     if (!player2.getSkipTurn() && !(element.textContent === "X" || element.textContent === "O")) {
@@ -120,15 +99,17 @@ function game(player1, player2, element) {
         element.textContent = player2.getPlayerMark();
         player2.setSkipTurn(true);
         player1.setSkipTurn(false);
-        if (p2 === "stop" || p2 === "finished" || p2 === "win") {
-            return "finished";
-        }else if (p1 === "win" || p2 === "win") {
-            return true;
+        console.log(ticTacToe.getGameBoardSize().length + " " + ticTacToe.getGameBoardSize());
+        player2.setSkipTurn(false);
+        if (p1 === "win" || p2 === "win") {
+            return "win";
+        }
+        if (ticTacToe.getGameBoardSize().length == 0) {
+            return "draw";
         }
         
 
     }
-    return false;
 }
 function players() {
     const player1 = player();
@@ -205,6 +186,9 @@ function createBoard() {
     const body = document.querySelector("body");
     const div1 = document.createElement("div");
     const div = document.createElement("div");
+    const btn = document.createElement("button")
+    btn.className = "reset";
+    btn.textContent = "reset board";
     div.className = "wraper";
     for (let i = 0; i < 9; i++) {
         const cell = document.createElement("div");
@@ -215,6 +199,7 @@ function createBoard() {
     div1.className = "score";
     body.appendChild(div1);
     body.appendChild(div);
+    body.appendChild(btn);
 
 }
 function eventHandlingContoller() {
@@ -256,9 +241,9 @@ function eventHandlingContoller() {
             let result = game(player1, player2, e.target);
             const div = document.querySelector(".score");
             div.textContent = `${player1.getPlayerName()}: ${player1.getScore()} ${player2.getPlayerName()}: ${player2.getScore()}`;
-            console.log(`${player1.getPlayerName()} ${player1.getColumns()} ${player2.getPlayerName()} ${player2.getColumns()} board ${ticTacToe.getGameBoardSize()}`);
-            if(result) {
+            if(result === "win" || result === "draw") {
                 document.querySelector(".wraper").remove();
+                document.querySelector(".reset").remove();
                 createBoard();
                 player1.reset();
                 player1.setSkipTurn(false);
@@ -266,6 +251,12 @@ function eventHandlingContoller() {
                 player2.reset();
                 ticTacToe.setGameBoardSize(9);
             }
+        }
+        if (e.target.className === "reset") {
+            document.querySelector(".wraper").remove();
+            createBoard();
+            e.target.remove();
+            ticTacToe.setGameBoardSize(9);
         }
     })
 }
